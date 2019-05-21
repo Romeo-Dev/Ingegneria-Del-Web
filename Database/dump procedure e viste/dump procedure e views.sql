@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.7.26, for Linux (x86_64)
 --
--- Host: 127.0.0.1    Database: PollWeb
+-- Host: localhost    Database: PollWeb
 -- ------------------------------------------------------
 -- Server version	5.7.26-0ubuntu0.18.04.1
 
@@ -16,88 +16,29 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Temporary table structure for view `getAllPartecipanti`
---
-
-DROP TABLE IF EXISTS `getAllPartecipanti`;
-/*!50001 DROP VIEW IF EXISTS `getAllPartecipanti`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE VIEW `getAllPartecipanti` AS SELECT 
- 1 AS `nome`,
- 1 AS `cognome`,
- 1 AS `titolo`,
- 1 AS `pw_sondaggio`,
- 1 AS `completato`,
- 1 AS `riservato`,
- 1 AS `testo_apertura`,
- 1 AS `testo_chiusura`*/;
-SET character_set_client = @saved_cs_client;
-
---
--- Temporary table structure for view `getNormalUser`
---
-
-DROP TABLE IF EXISTS `getNormalUser`;
-/*!50001 DROP VIEW IF EXISTS `getNormalUser`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE VIEW `getNormalUser` AS SELECT 
- 1 AS `nome`,
- 1 AS `cognome`,
- 1 AS `email`*/;
-SET character_set_client = @saved_cs_client;
-
---
--- Temporary table structure for view `getSondaggiPubblici`
---
-
-DROP TABLE IF EXISTS `getSondaggiPubblici`;
-/*!50001 DROP VIEW IF EXISTS `getSondaggiPubblici`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE VIEW `getSondaggiPubblici` AS SELECT 
- 1 AS `titolo`,
- 1 AS `testo_apertura`,
- 1 AS `testo_chiusura`,
- 1 AS `url`*/;
-SET character_set_client = @saved_cs_client;
-
---
--- Temporary table structure for view `getSondaggiStatusByAuthor`
---
-
-DROP TABLE IF EXISTS `getSondaggiStatusByAuthor`;
-/*!50001 DROP VIEW IF EXISTS `getSondaggiStatusByAuthor`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE VIEW `getSondaggiStatusByAuthor` AS SELECT 
- 1 AS `nome`,
- 1 AS `cognome`,
- 1 AS `email`,
- 1 AS `titolo`,
- 1 AS `riservato`,
- 1 AS `attivato`*/;
-SET character_set_client = @saved_cs_client;
-
---
--- Temporary table structure for view `getUser`
---
-
-DROP TABLE IF EXISTS `getUser`;
-/*!50001 DROP VIEW IF EXISTS `getUser`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE VIEW `getUser` AS SELECT 
- 1 AS `ruolo`,
- 1 AS `nome`,
- 1 AS `cognome`,
- 1 AS `email`*/;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping routines for database 'PollWeb'
 --
+/*!50003 DROP FUNCTION IF EXISTS `getID_bytipo` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` FUNCTION `getID_bytipo`(_tipo varchar(100)) RETURNS int(11)
+BEGIN
+	declare id integer(10);
+    select ID from tipologie where tipologia = _tipo into id;
+RETURN id;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP FUNCTION IF EXISTS `ruoloID` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -234,6 +175,25 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `create_domanda` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_domanda`(in tipo varchar(100), in id_sondaggio integer(11), in testo text, in nota text, in obbligatoria tinyint(1), in _min integer(11), in _max integer(11), in reg_exp varchar(100), in num_domanda integer(11))
+BEGIN
+	INSERT INTO domande (IDtipo, IDsondaggio, testo, nota, obbligatoria, min, max, regualr_exp, num_domanda) VALUES ( getID_bytipo(tipo), id_sondaggio, testo, nota, obbligatoria, _min, _max, reg_exp, num_domanda );
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `deletePartecipante` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -273,6 +233,25 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `delete_domanda` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_domanda`(in id_domanda integer(10))
+BEGIN
+	DELETE FROM domande where ID = id_domanda;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `getSondaggioByID` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -288,6 +267,65 @@ BEGIN
 		select nome, cognome , titolo, riservato, attivato, testo_apertura, testo_chiusura 
         from utenti as u join sondaggi as son on(u.ID = son.IDresponsabile)
         where u.ID = userID(email);
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `insertrisposte_byDomandaeUtente` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertrisposte_byDomandaeUtente`(in risposta varchar(255), in id_domanda integer(10), in id_utente integer(10))
+BEGIN
+	INSERT INTO risposte (IDdomanda, IDpartecipante, valore) VALUES (id_domanda, id_utente, risposta);
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `mostrarisposte_bySondaggioeUtente` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarisposte_bySondaggioeUtente`(in id_sondaggio integer(10), in id_utente integer(10))
+BEGIN
+	select * from domande as d join sondaggi as s join risposte as r on(s.ID = d.IDsondaggio and d.ID = r.IDdomanda)
+   where d.IDsondaggio = id_sondaggio and r.IDpartecipante = id_utente order by num_domanda asc;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `mostra_sondaggio` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `mostra_sondaggio`(in id_sondaggio integer(10))
+BEGIN
+   select * from domande as d join sondaggi as s on(s.ID = d.IDsondaggio)
+   where d.IDsondaggio = id_sondaggio order by num_domanda asc;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -333,96 +371,48 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-
---
--- Final view structure for view `getAllPartecipanti`
---
-
-/*!50001 DROP VIEW IF EXISTS `getAllPartecipanti`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `getAllPartecipanti` AS select `u`.`nome` AS `nome`,`u`.`cognome` AS `cognome`,`son`.`titolo` AS `titolo`,`p`.`pw_sondaggio` AS `pw_sondaggio`,`p`.`completato` AS `completato`,`son`.`riservato` AS `riservato`,`son`.`testo_apertura` AS `testo_apertura`,`son`.`testo_chiusura` AS `testo_chiusura` from ((`utenti` `u` join `partecipano` `p` on((`u`.`ID` = `p`.`IDpartecipante`))) join `sondaggi` `son` on((`p`.`IDsondaggio` = `son`.`ID`))) where (`son`.`attivato` = 1) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `getNormalUser`
---
-
-/*!50001 DROP VIEW IF EXISTS `getNormalUser`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `getNormalUser` AS select `utenti`.`nome` AS `nome`,`utenti`.`cognome` AS `cognome`,`utenti`.`email` AS `email` from `utenti` where (`utenti`.`IDruolo` = 1) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `getSondaggiPubblici`
---
-
-/*!50001 DROP VIEW IF EXISTS `getSondaggiPubblici`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `getSondaggiPubblici` AS select `son`.`titolo` AS `titolo`,`son`.`testo_apertura` AS `testo_apertura`,`son`.`testo_chiusura` AS `testo_chiusura`,`son`.`url` AS `url` from `sondaggi` `son` where ((`son`.`riservato` = 0) and (`son`.`attivato` = 1)) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `getSondaggiStatusByAuthor`
---
-
-/*!50001 DROP VIEW IF EXISTS `getSondaggiStatusByAuthor`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `getSondaggiStatusByAuthor` AS select `u`.`nome` AS `nome`,`u`.`cognome` AS `cognome`,`u`.`email` AS `email`,`son`.`titolo` AS `titolo`,`son`.`riservato` AS `riservato`,`son`.`attivato` AS `attivato` from (`sondaggi` `son` join `utenti` `u` on((`son`.`IDresponsabile` = `u`.`ID`))) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `getUser`
---
-
-/*!50001 DROP VIEW IF EXISTS `getUser`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `getUser` AS select `g`.`ruolo` AS `ruolo`,`u`.`nome` AS `nome`,`u`.`cognome` AS `cognome`,`u`.`email` AS `email` from (`gruppi` `g` join `utenti` `u` on((`g`.`ID` = `u`.`IDruolo`))) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
+/*!50003 DROP PROCEDURE IF EXISTS `update_domanda` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `update_domanda`(in id_domanda integer(10), in tipo varchar(100), in testo text, in nota text, in obbligatoria tinyint(1), in _min integer(11), in _max integer(11), in reg_exp varchar(100), in num_domanda integer(11))
+BEGIN
+	if (tipo is not null) then
+		UPDATE domande SET IDtipo = getID_bytipo(tipo) WHERE ID = id_domanda;
+	end if;
+	if (testo is not null) then
+		UPDATE domande SET testo = testo WHERE ID = id_domanda;
+	end if;
+	if (nota is not null) then
+		UPDATE domande SET nota = nota WHERE ID = id_domanda;
+	end if;
+	if (obbligatoria is not null) then
+		UPDATE domande SET obbligatoria = obbligatoria WHERE ID = id_domanda;
+	end if;
+	if (_min is not null) then
+		UPDATE domande SET min = _min WHERE ID = id_domanda;
+	end if;
+	if (_max is not null) then
+		UPDATE domande SET max = _max WHERE ID = id_domanda;
+	end if;
+	if (reg_exp is not null) then
+		UPDATE domande SET regular_exp = reg_exp WHERE ID = id_domanda;
+	end if;
+	if (num_domanda is not null) then
+		UPDATE domande SET num_domanda = num_domanda WHERE ID = id_domanda;
+	end if;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -433,4 +423,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-05-21 15:54:51
+-- Dump completed on 2019-05-21 15:59:41
